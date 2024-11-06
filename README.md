@@ -19,6 +19,7 @@ These are included in the repository - Windows only
 * [GLEW](http://glew.sourceforge.net) - The OpenGL Extension Wrangler Library for compatibility reasons
 * [GLFW3](http://www.glfw.org) - Platform-independent API for creating windows, reading input, handling events, etc.
 * [GLM](http://glm.g-truc.net) - C++ mathematics library for graphics software
+* [ASSIMP](https://assimp.org/) - Open Asset Import Library is a library to load various 3d file formats.
 
 You can also use CMake directly to generate project files for many other IDEs, see [Generic CMake instructions](#generic-instructions-for-using-cmake).
 
@@ -26,14 +27,14 @@ You can also use CMake directly to generate project files for many other IDEs, s
 On Linux install the following dependencies using your package manager, for example on Ubuntu open your terminal and do:
 
 ```bash
-sudo apt-get install build-essential cmake libglew-dev libglfw3-dev libglm-dev
+sudo apt-get install build-essential cmake libglew-dev libglfw3-dev libglm-dev libassimp-dev
 ```
 
 ### Apple macOS dependencies
 On macOS install [Homebrew](http://brew.sh) package manager and install the dependencies using the following commands in terminal. Note that the installation of Homebrew expects __XCode__ to be installed, this can be simply downloaded from the app store.
 
 ```bash
-brew install cmake glm glfw glew libomp
+brew install cmake glm glfw glew libomp assimp
 ```
 
 You can also install CMake and use it to generate project files for your IDE of choice.
@@ -113,6 +114,7 @@ Try to install `mesa-common-dev`, `libgl1-mesa-dev` and `libglu1-mesa-dev`
 - GLFW [official documentation](http://www.glfw.org/docs/latest/) and [guide](http://www.glfw.org/docs/latest/quick.html)
 - GLEW [use guide](http://glew.sourceforge.net/basic.htm)
 - CMake [basic use](https://cmake.org/runningcmake/) and [tutorial](https://cmake.org/cmake-tutorial/)
+- ASSIMP [official documentation](https://assimp-docs.readthedocs.io/en/latest/) and [assimp wiki](https://github.com/assimp/assimp/wiki)
 
 
 ## OpenGL 3.3 examples
