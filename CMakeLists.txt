@@ -111,6 +111,7 @@ if (ASSIMP_FOUND)
           ppgso/image_raw.cpp
           ppgso/texture.cpp
           ppgso/window.cpp
+          src/terrain/Terrain.cpp
   )
 else ()
   message(STATUS "Using TINY object loader")
@@ -123,6 +124,7 @@ else ()
           ppgso/image_raw.cpp
           ppgso/texture.cpp
           ppgso/window.cpp
+          src/terrain/Terrain.cpp
   )
 endif ()
 
@@ -276,6 +278,26 @@ add_executable(playground src/playground/playground.cpp)
 target_link_libraries(playground ppgso shaders)
 install (TARGETS playground DESTINATION .)
 add_custom_command(TARGET playground POST_BUILD COMMAND  ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/data/ ${CMAKE_CURRENT_BINARY_DIR})
+
+# My custom project
+add_executable(my_project src/my_project/my_project.cpp)
+target_link_libraries(my_project ppgso shaders)
+install(TARGETS my_project DESTINATION .)
+add_custom_command(TARGET my_project POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_SOURCE_DIR}/data/ ${CMAKE_CURRENT_BINARY_DIR})
+
+add_executable(island_demo src/examples/island_demo.cpp)
+target_include_directories(island_demo PRIVATE ${CMAKE_SOURCE_DIR}/src)
+target_link_libraries(island_demo PRIVATE ppgso)
+
+add_custom_command(
+        TARGET island_demo POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_SOURCE_DIR}/shader
+        ${CMAKE_BINARY_DIR}/shader
+)
+
 #
 # INSTALLATION
 #
