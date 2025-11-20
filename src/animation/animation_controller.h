@@ -1,0 +1,8 @@
+//
+// Created by mrepi on 20. 11. 2025.
+//
+
+#ifndef PPGSO_ANIMATION_CONTROLLER_H
+#define PPGSO_ANIMATION_CONTROLLER_H
+
+#endif //PPGSO_ANIMATION_CONTROLLER_H

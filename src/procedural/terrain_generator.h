@@ -1,0 +1,8 @@
+//
+// Created by mrepi on 20. 11. 2025.
+//
+
+#ifndef PPGSO_TERRAIN_GENERATOR_H
+#define PPGSO_TERRAIN_GENERATOR_H
+
+#endif //PPGSO_TERRAIN_GENERATOR_H

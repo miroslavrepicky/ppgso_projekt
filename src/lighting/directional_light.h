@@ -1,0 +1,8 @@
+//
+// Created by mrepi on 20. 11. 2025.
+//
+
+#ifndef PPGSO_DIRECTIONAL_LIGHT_H
+#define PPGSO_DIRECTIONAL_LIGHT_H
+
+#endif //PPGSO_DIRECTIONAL_LIGHT_H
