@@ -192,6 +192,57 @@ add_custom_command(
         ${CMAKE_SOURCE_DIR}/shader
         ${CMAKE_BINARY_DIR}/shader
 )
+
+add_executable(main_demo
+        src/island_demo/main.cpp
+        src/island_demo/scene.cpp
+        src/animation/animation_controller.cpp
+        src/animation/interpolation.cpp
+        src/animation/keyframe.cpp
+        src/camera/camera.cpp
+        src/camera/camera_path.cpp
+        src/lighting/directional_light.cpp
+        src/lighting/light.cpp
+        src/lighting/point_light.cpp
+        src/lighting/shadow_map.cpp
+        src/lighting/spot_light.cpp
+        src/objects/bird.cpp
+        src/objects/crab.cpp
+        src/objects/island.cpp
+        src/objects/object.cpp
+        src/objects/palm_tree.cpp
+        src/objects/rock.cpp
+        src/objects/sand_particle.cpp
+        src/objects/sky_box.cpp
+        src/objects/water_plane.cpp
+        src/objects/waterfall.cpp
+        src/objects/wave.cpp
+        src/particles/dust_particles.cpp
+        src/particles/falling_leaves.cpp
+        src/particles/particle_system.cpp
+        src/particles/water_spray.cpp
+        src/physics/collision.cpp
+        src/physics/force_system.cpp
+        src/physics/rigid_body.cpp
+        src/post_processing/bloom_filter.cpp
+        src/post_processing/blur_filter.cpp
+        src/post_processing/framebuffer.cpp
+        src/post_processing/tone_mapping.cpp
+        src/procedural/rock_generator.cpp
+        src/procedural/terrain_generator.cpp
+        src/procedural/tree_generator.cpp
+        src/scene_graph/scene_node.cpp
+        src/scene_graph/transform.cpp
+)
+target_include_directories(main_demo PRIVATE ${CMAKE_SOURCE_DIR}/src)
+target_link_libraries(main_demo PRIVATE ppgso shaders)
+add_custom_command(
+        TARGET main_demo POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_SOURCE_DIR}/shader
+        ${CMAKE_BINARY_DIR}/shader
+)
+
 # TASKs
 
 
