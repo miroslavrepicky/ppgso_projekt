@@ -1,4 +1,5 @@
 #include "camera.h"
+#include <glm/gtx/quaternion.hpp>
 
 namespace ppgso {
 

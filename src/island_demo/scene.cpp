@@ -1,4 +1,6 @@
 #include "scene.h"
+#include "objects/test_cube.h"
+#include "objects/object.h"
 
 namespace ppgso {
 
@@ -52,8 +54,23 @@ namespace ppgso {
         glEnable(GL_DEPTH_TEST);
         glDepthFunc(GL_LEQUAL);
 
-        // Render graf sceny (rekurzivne)
-        rootNode->renderRecursive();
+        // Render vsetky objekty s kamerou
+        renderNodeWithCamera(rootNode, camera);
+    }
+
+    void Scene::renderNodeWithCamera(std::shared_ptr<SceneNode> node, const Camera& camera) {
+        if (!node || !node->isVisible()) return;
+
+        // Ak je to Object, renderuj ho s kamerou
+        auto obj = std::dynamic_pointer_cast<Object>(node);
+        if (obj) {
+            obj->renderWithCamera(camera);
+        }
+
+        // Renderuj deti
+        for (auto& child : node->getChildren()) {
+            renderNodeWithCamera(child, camera);
+        }
     }
 
     void Scene::resize(int width, int height) {
@@ -98,6 +115,10 @@ namespace ppgso {
         return time;
     }
 
+    std::vector<std::shared_ptr<Light>>& Scene::getLights() {
+        return lights;
+    }
+
     // Setup metody
     void Scene::setupScene() {
         // Nastav background color (ocean blue)
@@ -109,18 +130,43 @@ namespace ppgso {
     }
 
     void Scene::setupLights() {
-        // TODO: Implementovat v dalsej faze
-        // Vytvorit smerove svetlo (slnko)
-        // Vytvorit bodove svetla
-        // Vytvorit reflektory
+        // 1. Directional Light (Slnko)
+        auto sun = std::make_shared<DirectionalLight>();
+        sun->setDirection(glm::vec3(-0.3f, -1.0f, -0.5f));
+        sun->setColor(glm::vec3(1.0f, 0.95f, 0.8f));
+        sun->intensity = 1.0f;
+        lights.push_back(sun);
+
+        // 2. Point Light (Bodove svetlo nad scenou)
+        auto pointLight = std::make_shared<PointLight>(glm::vec3(5.0f, 10.0f, 5.0f));
+        pointLight->setColor(glm::vec3(1.0f, 0.8f, 0.6f)); // Tepla oranzova
+        pointLight->intensity = 0.8f;
+        pointLight->setRange(50.0f);
+        lights.push_back(pointLight);
+
+        // 3. Spot Light (Reflektor)
+        auto spotlight = std::make_shared<SpotLight>(
+            glm::vec3(-5.0f, 10.0f, -5.0f),
+            glm::vec3(0.5f, -1.0f, 0.5f)
+        );
+        spotlight->setColor(glm::vec3(0.8f, 0.9f, 1.0f)); // Studena modra
+        spotlight->intensity = 1.2f;
+        spotlight->setCutoff(15.0f, 25.0f);
+        spotlight->setRange(40.0f);
+        lights.push_back(spotlight);
+
+        std::cout << "Created " << lights.size() << " lights" << std::endl;
     }
 
     void Scene::setupObjects() {
-        // TODO: Implementovat v dalsej faze
-        // Vytvorit ostrov
-        // Vytvorit stromy
-        // Vytvorit skaly
-        // atd.
+        // Testovacia kocka v strede
+        auto cube = std::make_shared<TestCube>();
+        cube->getTransform().setPosition(glm::vec3(0.0f, 0.0f, 0.0f));
+        cube->getTransform().setScale(2.0f);
+        cube->setLights(lights);
+        addNode(cube);
+
+        std::cout << "Created test objects" << std::endl;
     }
 
 } // namespace ppgso

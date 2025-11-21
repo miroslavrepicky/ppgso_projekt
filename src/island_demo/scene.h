@@ -7,6 +7,10 @@
 
 #include "camera/camera.h"
 #include "scene_graph/scene_node.h"
+#include "lighting/light.h"
+#include "lighting/directional_light.h"
+#include "lighting/point_light.h"
+#include "lighting/spot_light.h"
 
 namespace ppgso {
 
@@ -42,6 +46,9 @@ namespace ppgso {
         void addNode(std::shared_ptr<SceneNode> node);
         void removeNode(std::shared_ptr<SceneNode> node);
 
+        // Svetla - pristup k svetlam v scene
+        std::vector<std::shared_ptr<Light>>& getLights();
+
         // Cas
         float getTime() const;
 
@@ -51,6 +58,9 @@ namespace ppgso {
 
         // Graf sceny
         std::shared_ptr<SceneNode> rootNode;
+
+        // Svetla
+        std::vector<std::shared_ptr<Light>> lights;
 
         // Cas
         float time;
@@ -63,6 +73,9 @@ namespace ppgso {
         void setupScene();
         void setupLights();
         void setupObjects();
+
+        // Helper pre rendering s kamerou
+        void renderNodeWithCamera(std::shared_ptr<SceneNode> node, const Camera& camera);
     };
 
 } // namespace ppgso

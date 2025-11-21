@@ -98,6 +98,8 @@ set(PPGSO_SHADER_SRC
         shader/texture_vert.glsl shader/texture_frag.glsl
         shader/terrain_vert.glsl shader/terrain_frag.glsl
         shader/ocean_vert.glsl shader/ocean_frag.glsl
+        shader/island_demo/basic_vert.glsl shader/island_demo/basic_frag.glsl
+        shader/island_demo/phong_vert.glsl shader/island_demo/phong_frag.glsl
 )
 add_resources(shaders ${PPGSO_SHADER_SRC})
 
@@ -206,6 +208,7 @@ add_executable(main_demo
         src/lighting/point_light.cpp
         src/lighting/shadow_map.cpp
         src/lighting/spot_light.cpp
+        src/objects/test_cube.cpp
         src/objects/bird.cpp
         src/objects/crab.cpp
         src/objects/island.cpp

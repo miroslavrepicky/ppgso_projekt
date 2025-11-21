@@ -49,9 +49,10 @@ namespace ppgso {
         }
     }
 
-    void Object::loadShader(const std::string& vertPath, const std::string& fragPath) {
+    void Object::loadShader(const std::string& vertShaderSrc, const std::string& fragShaderSrc) {
         try {
-            shader = std::make_unique<ppgso::Shader>(vertPath, fragPath);
+            // Priamo pouzi embedded shader stringy (nie cesty k suborom)
+            shader = std::make_unique<ppgso::Shader>(vertShaderSrc, fragShaderSrc);
         } catch (std::exception& e) {
             std::cerr << "Error loading shader: " << e.what() << std::endl;
         }
