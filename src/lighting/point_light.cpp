@@ -41,15 +41,18 @@ namespace ppgso {
     }
 
     void PointLight::setupShaderUniforms(ppgso::Shader& shader, int lightIndex) {
-        if (!enabled) return;
+        if (!enabled) {
+            shader.setUniform(getUniformName(lightIndex, "enabled"), 0);
+            return;
+        }
 
-        // Typ svetla
-        shader.setUniform(getUniformName(lightIndex, "type"), 1); // 1 = POINT
+        // Type
+        shader.setUniform(getUniformName(lightIndex, "type"), 1); // POINT
 
-        // Pozicia
+        // Position
         shader.setUniform(getUniformName(lightIndex, "position"), position);
 
-        // Farby
+        // Colors
         shader.setUniform(getUniformName(lightIndex, "ambient"), ambient * intensity);
         shader.setUniform(getUniformName(lightIndex, "diffuse"), diffuse * intensity);
         shader.setUniform(getUniformName(lightIndex, "specular"), specular * intensity);
@@ -60,7 +63,7 @@ namespace ppgso {
         shader.setUniform(getUniformName(lightIndex, "quadraticAttenuation"), quadraticAttenuation);
 
         // Enabled
-        shader.setUniform(getUniformName(lightIndex, "enabled"), enabled ? 1 : 0);
+        shader.setUniform(getUniformName(lightIndex, "enabled"), 1);
     }
 
 } // namespace ppgso

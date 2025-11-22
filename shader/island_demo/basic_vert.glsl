@@ -13,8 +13,8 @@ out vec2 TexCoord;
 uniform mat4 MVP;  // ModelViewProjection matrix
 
 void main() {
-    // Pouzijeme normalu ako farbu (pre vizualizaciu)
-    FragColor = aNormal * 0.5 + 0.5; // Normalizo from [-1,1] to [0,1]
+    // Use normal as color (for visualization)
+    FragColor = aNormal * 0.5 + 0.5; // Normalize from [-1,1] to [0,1]
 
     TexCoord = aTexCoord;
 

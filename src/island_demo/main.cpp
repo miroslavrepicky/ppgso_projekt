@@ -70,6 +70,7 @@ public:
     }
 
     void onKey(int key, int scanCode, int action, int mods) override {
+        std::cout << "KEY PRESSED: " << key << " action: " << action << std::endl;
         if (action != GLFW_PRESS) return;
 
         switch (key) {
@@ -124,14 +125,20 @@ public:
 };
 
 int main() {
-    // Info o verzii OpenGL
-    std::cout << "OpenGL Version: " << glGetString(GL_VERSION) << std::endl;
-    std::cout << "GLSL Version: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
+    std::cout << "=== PROGRAM START ===" << std::endl;
 
-    // Vytvor a spusti okno
     try {
         IslandDemoWindow window;
-        while (window.pollEvents()) {}
+
+        std::cout << "Starting main loop..." << std::endl;
+
+        // EXPLICITNE volajte onIdle
+        while (window.pollEvents()) {
+            window.onIdle();  // PRIDAJTE TOTO
+        }
+
+        std::cout << "Main loop ended" << std::endl;
+
     } catch (std::exception& e) {
         std::cerr << "❌ Error: " << e.what() << std::endl;
         return EXIT_FAILURE;

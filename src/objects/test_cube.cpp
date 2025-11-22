@@ -7,25 +7,33 @@ namespace ppgso {
     TestCube::TestCube() : Object("TestCube") {
         // Load mesh (ppgso ma built-in cube)
         loadMesh("cube.obj");
-        
-        // Load shader
+
+        // Load shader z generovanych headerov
         loadShader(phong_vert_glsl, phong_frag_glsl);
-        
+
+        if (!shader) {
+            std::cerr << "FATAL: Shader failed to load!" << std::endl;
+        } else {
+            std::cout << "Shader loaded successfully" << std::endl;
+        }
+
         // Setup material (zlaty kov)
         setupMaterial();
 
-        
         // Rotacia
         rotationSpeed = 1.0f;
         enableRotation = true;
     }
 
     void TestCube::setupMaterial() {
-        // Zlaty material
-        materialAmbient = glm::vec3(0.24725f, 0.1995f, 0.0745f);
-        materialDiffuse = glm::vec3(0.75164f, 0.60648f, 0.22648f);
-        materialSpecular = glm::vec3(0.628281f, 0.555802f, 0.366065f);
-        materialShininess = 51.2f;
+        // Jednoduchsi material pre testovanie
+        materialAmbient = glm::vec3(0.8f, 0.6f, 0.2f);   // Svetlejsi ambient!
+        materialDiffuse = glm::vec3(0.8f, 0.6f, 0.2f);
+        materialSpecular = glm::vec3(1.0f, 1.0f, 1.0f);
+        materialShininess = 32.0f;
+
+        std::cout << "Material Ambient: " << materialAmbient.x << ", "
+                  << materialAmbient.y << ", " << materialAmbient.z << std::endl;
     }
 
     void TestCube::update(float deltaTime) {
@@ -39,10 +47,7 @@ namespace ppgso {
     void TestCube::renderWithCamera(const Camera& camera) {
         if (!mesh || !shader) return;
 
-        // Use shader
         shader->use();
-
-        // Setup basic uniforms
         setupShaderUniforms(camera);
 
         // Setup material uniforms
@@ -51,26 +56,44 @@ namespace ppgso {
         shader->setUniform("material.specular", materialSpecular);
         shader->setUniform("material.shininess", materialShininess);
 
-        // Camera position (for specular)
         shader->setUniform("viewPos", camera.getPosition());
-
-        // Texture (zatial nepouzivame)
         shader->setUniform("useTexture", false);
-
-        // Blinn-Phong (default true)
         shader->setUniform("useBlinnPhong", true);
 
         // Setup lights
-        shader->setUniform("numLights", (int)lights.size());
-        for (size_t i = 0; i < lights.size() && i < 10; i++) {
+        int numLights = (int)lights.size();
+        shader->setUniform("numLights", numLights);
+
+        // DEBUG - raz za cas
+        static int debugCounter = 0;
+        if (debugCounter++ % 120 == 0) {
+            std::cout << "\n=== RENDER DEBUG ===" << std::endl;
+            std::cout << "NumLights: " << numLights << std::endl;
+            std::cout << "Material diffuse: " << materialDiffuse.x << ", "
+                      << materialDiffuse.y << ", " << materialDiffuse.z << std::endl;
+            std::cout << "Camera position: " << camera.getPosition().x << ", "
+                      << camera.getPosition().y << ", " << camera.getPosition().z << std::endl;
+        }
+
+        for (size_t i = 0; i < lights.size() && i < 3; i++) {  // Max 3 svetla
             if (lights[i]) {
+                if (debugCounter % 120 == 1) {
+                    std::cout << "\nLight " << i << ":" << std::endl;
+                    std::cout << "  Type: " << (int)lights[i]->getType() << std::endl;
+                    std::cout << "  Enabled: " << lights[i]->enabled << std::endl;
+                    std::cout << "  Intensity: " << lights[i]->intensity << std::endl;
+                    std::cout << "  Ambient: " << lights[i]->ambient.x << ", "
+                              << lights[i]->ambient.y << ", " << lights[i]->ambient.z << std::endl;
+                    std::cout << "  Diffuse: " << lights[i]->diffuse.x << ", "
+                              << lights[i]->diffuse.y << ", " << lights[i]->diffuse.z << std::endl;
+                    std::cout << "  Specular: " << lights[i]->specular.x << ", "
+                              << lights[i]->specular.y << ", " << lights[i]->specular.z << std::endl;
+                }
                 lights[i]->setupShaderUniforms(*shader, (int)i);
             }
         }
 
-        // Render mesh
         mesh->render();
-
     }
 
     void TestCube::setLights(const std::vector<std::shared_ptr<Light>>& lights) {

@@ -32,8 +32,14 @@ namespace ppgso {
 
         // Setup sceny
         setupScene();
+
+        // DOLEZITE: Najprv vytvor svetla
         setupLights();
+
+        // Potom objekty (potrebuju referenciu na svetla)
         setupObjects();
+
+        std::cout << "Scene initialized with " << lights.size() << " lights" << std::endl;
     }
 
     void Scene::update(float deltaTime) {
@@ -130,17 +136,19 @@ namespace ppgso {
     }
 
     void Scene::setupLights() {
-        // 1. Directional Light (Slnko)
+        // 1. Directional Light (Slnko) - silnejsie pre testovanie
         auto sun = std::make_shared<DirectionalLight>();
         sun->setDirection(glm::vec3(-0.3f, -1.0f, -0.5f));
-        sun->setColor(glm::vec3(1.0f, 0.95f, 0.8f));
+        sun->ambient = glm::vec3(0.5f, 0.5f, 0.5f);  // Silny ambient pre test
+        sun->diffuse = glm::vec3(2.0f, 1.9f, 1.6f);  // Velmi silne difuzne svetlo
+        sun->specular = glm::vec3(1.0f, 1.0f, 1.0f);
         sun->intensity = 1.0f;
         lights.push_back(sun);
 
         // 2. Point Light (Bodove svetlo nad scenou)
         auto pointLight = std::make_shared<PointLight>(glm::vec3(5.0f, 10.0f, 5.0f));
         pointLight->setColor(glm::vec3(1.0f, 0.8f, 0.6f)); // Tepla oranzova
-        pointLight->intensity = 0.8f;
+        pointLight->intensity = 2.0f;  // Vyssia intenzita
         pointLight->setRange(50.0f);
         lights.push_back(pointLight);
 
@@ -150,12 +158,14 @@ namespace ppgso {
             glm::vec3(0.5f, -1.0f, 0.5f)
         );
         spotlight->setColor(glm::vec3(0.8f, 0.9f, 1.0f)); // Studena modra
-        spotlight->intensity = 1.2f;
+        spotlight->intensity = 2.0f;  // Vyssia intenzita
         spotlight->setCutoff(15.0f, 25.0f);
         spotlight->setRange(40.0f);
         lights.push_back(spotlight);
 
         std::cout << "Created " << lights.size() << " lights" << std::endl;
+        std::cout << "Sun direction: " << sun->getDirection().x << ", "
+                  << sun->getDirection().y << ", " << sun->getDirection().z << std::endl;
     }
 
     void Scene::setupObjects() {

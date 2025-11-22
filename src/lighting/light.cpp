@@ -39,8 +39,8 @@ namespace ppgso {
     }
 
     std::string Light::getUniformName(int lightIndex, const std::string& property) const {
-        // Napr: "lights[0].ambient"
-        return "lights[" + std::to_string(lightIndex) + "]." + property;
+        // Instead of "lights[0].ambient", use "light0_ambient"
+        return "light" + std::to_string(lightIndex) + "_" + property;
     }
 
 } // namespace ppgso

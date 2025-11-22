@@ -28,21 +28,34 @@ namespace ppgso {
     }
 
     void DirectionalLight::setupShaderUniforms(ppgso::Shader& shader, int lightIndex) {
-        if (!enabled) return;
+        std::string prefix = "light" + std::to_string(lightIndex) + "_";
 
-        // Typ svetla
-        shader.setUniform(getUniformName(lightIndex, "type"), 0); // 0 = DIRECTIONAL
+        if (!enabled) {
+            shader.setUniform(prefix + "enabled", 0);
+            return;
+        }
 
-        // Smer
-        shader.setUniform(getUniformName(lightIndex, "direction"), direction);
+        // Debug output
+        static int debugCount = 0;
+        if (debugCount++ % 120 == 0) {
+            std::cout << "DirectionalLight[" << lightIndex << "] setting uniforms:" << std::endl;
+            std::cout << "  direction: " << direction.x << ", " << direction.y << ", " << direction.z << std::endl;
+            std::cout << "  uniform name: " << prefix + "direction" << std::endl;
+        }
 
-        // Farby
-        shader.setUniform(getUniformName(lightIndex, "ambient"), ambient * intensity);
-        shader.setUniform(getUniformName(lightIndex, "diffuse"), diffuse * intensity);
-        shader.setUniform(getUniformName(lightIndex, "specular"), specular * intensity);
+        // Type
+        shader.setUniform(prefix + "type", 0); // DIRECTIONAL
+
+        // Direction
+        shader.setUniform(prefix + "direction", direction);
+
+        // Colors
+        shader.setUniform(prefix + "ambient", ambient * intensity);
+        shader.setUniform(prefix + "diffuse", diffuse * intensity);
+        shader.setUniform(prefix + "specular", specular * intensity);
 
         // Enabled
-        shader.setUniform(getUniformName(lightIndex, "enabled"), enabled ? 1 : 0);
+        shader.setUniform(prefix + "enabled", 1);
     }
 
 } // namespace ppgso

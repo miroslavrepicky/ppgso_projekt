@@ -6,9 +6,9 @@ layout(location = 1) in vec3 aNormal;
 layout(location = 2) in vec2 aTexCoord;
 
 // Output to fragment shader
-out vec3 FragPos;        // Pozicia fragmentu v world space
-out vec3 Normal;         // Normala v world space
-out vec2 TexCoord;       // Texturove koordinaty
+out vec3 FragPos;        // Fragment position in world space
+out vec3 Normal;         // Normal in world space
+out vec2 TexCoord;       // Texture coordinates
 
 // Uniforms
 uniform mat4 ModelMatrix;
@@ -17,15 +17,15 @@ uniform mat4 ProjectionMatrix;
 uniform mat3 NormalMatrix;  // transpose(inverse(ModelMatrix))
 
 void main() {
-    // Pozicia vo world space
+    // Position in world space
     FragPos = vec3(ModelMatrix * vec4(aPosition, 1.0));
 
-    // Normala vo world space (pouzijeme NormalMatrix pre spravnu transformaciu)
+    // Normal in world space (use NormalMatrix for correct transformation)
     Normal = normalize(NormalMatrix * aNormal);
 
-    // Texturove koordinaty (passthrough)
+    // Texture coordinates (passthrough)
     TexCoord = aTexCoord;
 
-    // Finalna pozicia (clip space)
+    // Final position (clip space)
     gl_Position = ProjectionMatrix * ViewMatrix * vec4(FragPos, 1.0);
 }

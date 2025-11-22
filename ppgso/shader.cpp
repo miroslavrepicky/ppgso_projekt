@@ -141,3 +141,15 @@ void ppgso::Shader::setUniform(const std::string &name, glm::vec4 vector) const 
   auto uniform = getUniformLocation(name.c_str());
   glUniform4fv(uniform, 1, value_ptr(vector));
 }
+
+void ppgso::Shader::setUniform(const std::string &name, int value) const {
+  use();
+  auto uniform = getUniformLocation(name.c_str());
+  glUniform1i(uniform, value);
+}
+
+void ppgso::Shader::setUniform(const std::string &name, bool value) const {
+  use();
+  auto uniform = getUniformLocation(name.c_str());
+  glUniform1i(uniform, value ? 1 : 0);
+}

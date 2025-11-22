@@ -58,21 +58,24 @@ namespace ppgso {
     }
 
     void SpotLight::setupShaderUniforms(ppgso::Shader& shader, int lightIndex) {
-        if (!enabled) return;
+        if (!enabled) {
+            shader.setUniform(getUniformName(lightIndex, "enabled"), 0);
+            return;
+        }
 
-        // Typ svetla
-        shader.setUniform(getUniformName(lightIndex, "type"), 2); // 2 = SPOT
+        // Type
+        shader.setUniform(getUniformName(lightIndex, "type"), 2); // SPOT
 
-        // Pozicia a smer
+        // Position and direction
         shader.setUniform(getUniformName(lightIndex, "position"), position);
         shader.setUniform(getUniformName(lightIndex, "direction"), direction);
 
-        // Farby
+        // Colors
         shader.setUniform(getUniformName(lightIndex, "ambient"), ambient * intensity);
         shader.setUniform(getUniformName(lightIndex, "diffuse"), diffuse * intensity);
         shader.setUniform(getUniformName(lightIndex, "specular"), specular * intensity);
 
-        // Cutoff uhly (uz su ako cosinus)
+        // Cutoff angles (already as cosine)
         shader.setUniform(getUniformName(lightIndex, "innerCutoff"), innerCutoff);
         shader.setUniform(getUniformName(lightIndex, "outerCutoff"), outerCutoff);
 
@@ -82,7 +85,7 @@ namespace ppgso {
         shader.setUniform(getUniformName(lightIndex, "quadraticAttenuation"), quadraticAttenuation);
 
         // Enabled
-        shader.setUniform(getUniformName(lightIndex, "enabled"), enabled ? 1 : 0);
+        shader.setUniform(getUniformName(lightIndex, "enabled"), 1);
     }
 
 } // namespace ppgso

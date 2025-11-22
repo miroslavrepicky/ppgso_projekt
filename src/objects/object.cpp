@@ -49,12 +49,21 @@ namespace ppgso {
         }
     }
 
-    void Object::loadShader(const std::string& vertShaderSrc, const std::string& fragShaderSrc) {
+    void Object::loadShader(const std::string& vertPath, const std::string& fragPath) {
         try {
-            // Priamo pouzi embedded shader stringy (nie cesty k suborom)
-            shader = std::make_unique<ppgso::Shader>(vertShaderSrc, fragShaderSrc);
+            // ppgso::Shader očakáva cesty bez .glsl prípony alebo priamo string s kodom
+            shader = std::make_unique<ppgso::Shader>(vertPath, fragPath);
         } catch (std::exception& e) {
-            std::cerr << "Error loading shader: " << e.what() << std::endl;
+            std::cerr << "Error loading shader " << vertPath << "/" << fragPath << ": " << e.what() << std::endl;
+        }
+    }
+
+    void Object::loadShader(const char* vertCode, const char* fragCode) {
+        try {
+            // Priame nacitanie z string kodu (ako v test_cube.cpp)
+            shader = std::make_unique<ppgso::Shader>(vertCode, fragCode);
+        } catch (std::exception& e) {
+            std::cerr << "Error loading shader from code: " << e.what() << std::endl;
         }
     }
 

@@ -33,7 +33,8 @@ namespace ppgso {
 
         // Helper metody
         virtual void loadMesh(const std::string& filename);
-        void loadShader(const std::string& vertShaderSrc, const std::string& fragShaderSrc);
+        virtual void loadShader(const std::string& vertPath, const std::string& fragPath);
+        virtual void loadShader(const char* vertCode, const char* fragCode); // Overload pre priamy kod
         virtual void loadTexture(const std::string& filename);
 
         // Rendering helpers

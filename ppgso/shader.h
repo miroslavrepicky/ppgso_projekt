@@ -107,6 +107,8 @@ namespace ppgso {
      * @param matrix - Matrix to set input to.
      */
     void setUniform(const std::string &name, glm::mat3 matrix) const;
+    void setUniform(const std::string &name, int value) const;
+    void setUniform(const std::string &name, bool value) const;
 
   private:
     GLuint program;
