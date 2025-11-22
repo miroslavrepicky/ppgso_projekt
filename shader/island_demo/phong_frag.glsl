@@ -66,6 +66,8 @@ uniform bool useBlinnPhong;
 
 void main() {
     vec3 norm = normalize(Normal);
+    // DEBUG: Vizualizujte normaly ako farbu
+    FragColor = vec4(norm * 0.5 + 0.5, 1.0);  // Odkomentujte tento riadok
     vec3 viewDir = normalize(viewPos - FragPos);
     vec3 result = vec3(0.0);
 

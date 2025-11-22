@@ -85,8 +85,6 @@ namespace ppgso {
 
         // NormalMatrix workaround
         glm::mat3 normalMatrix = glm::transpose(glm::inverse(glm::mat3(modelMatrix)));
-        shader->setUniform("NormalMatrix0", normalMatrix[0]);
-        shader->setUniform("NormalMatrix1", normalMatrix[1]);
-        shader->setUniform("NormalMatrix2", normalMatrix[2]);
+        shader->setUniform("NormalMatrix", normalMatrix);
     }
 } // namespace ppgso

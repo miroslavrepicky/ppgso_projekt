@@ -7,7 +7,9 @@ namespace ppgso {
 
     TestCube::TestCube() : Object("TestCube") {
         loadMesh("cube.obj");
+
         loadShader(phong_vert_glsl, phong_frag_glsl);
+
 
         if (!shader) {
             std::cerr << "ERROR: Shader failed to load!" << std::endl;
@@ -33,7 +35,13 @@ namespace ppgso {
     }
 
     void TestCube::renderWithCamera(const Camera& camera) {
-        if (!mesh || !shader) return;
+        if (!mesh || !shader) {
+            std::cerr << "❌ Cannot render: mesh=" << (mesh ? "OK" : "NULL")
+                      << ", shader=" << (shader ? "OK" : "NULL") << std::endl;
+            return;
+        }
+
+        std::cout << "🎨 Rendering cube..." << std::endl;
 
         shader->use();
         setupShaderUniforms(camera);
@@ -56,7 +64,9 @@ namespace ppgso {
             }
         }
 
+        std::cout << "📦 Calling mesh->render()..." << std::endl;  // ✅ Vidíte toto?
         mesh->render();
+        std::cout << "✅ mesh->render() done" << std::endl;  // ✅ Vidíte toto?
     }
 
     void TestCube::setLights(const std::vector<std::shared_ptr<Light>>& lights) {

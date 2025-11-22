@@ -2,6 +2,7 @@
 #include "objects/test_cube.h"
 #include "objects/object.h"
 
+
 namespace ppgso {
     Scene::Scene()
         : time(0.0f)
@@ -10,6 +11,7 @@ namespace ppgso {
     {
         // Vytvor root uzol grafu sceny
         rootNode = std::make_shared<SceneNode>("Root");
+        cameraPath = std::make_unique<CameraPath>();  // Novy
     }
 
     Scene::~Scene() {
@@ -44,8 +46,13 @@ namespace ppgso {
     void Scene::update(float deltaTime) {
         time += deltaTime;
 
-        // Update kamery
-        camera.update(deltaTime);
+        // Update camera animation
+        if (useCameraAnimation && cameraPath) {
+            cameraPath->update(deltaTime);
+            cameraPath->applyToCamera(camera);
+        } else {
+            camera.update(deltaTime);
+        }
 
         // Update grafu sceny (rekurzivne)
         rootNode->updateRecursive(deltaTime);
@@ -169,7 +176,65 @@ namespace ppgso {
         cube->setLights(lights);
         addNode(cube);
 
-        std::cout << "Created test objects" << std::endl;
+        auto animatedCube = std::make_shared<AnimatedCube>();
+        animatedCube->getTransform().setScale(1.5f);
+        animatedCube->setLights(lights);
+        animatedCube->enableBobbing(true);
+        animatedCube->setBobbingAmplitude(0.5f);
+        addNode(animatedCube);
+
+        std::cout << "Created test objects (static + animated)" << std::endl;
+    }
+
+    // Nová metoda na setup camera path:
+    void Scene::setupCameraAnimation() {
+        // Vytvor camera path s keyframes
+        cameraPath->addKeyframe(0.0f,
+            glm::vec3(0.0f, 15.0f, 40.0f),   // Pozicia kamery
+            glm::vec3(0.0f, 0.0f, 0.0f));     // Target (kam sa pozera)
+
+        cameraPath->addKeyframe(5.0f,
+            glm::vec3(20.0f, 10.0f, 20.0f),
+            glm::vec3(0.0f, 0.0f, 0.0f));
+
+        cameraPath->addKeyframe(10.0f,
+            glm::vec3(0.0f, 20.0f, -30.0f),
+            glm::vec3(0.0f, 0.0f, 0.0f));
+
+        cameraPath->addKeyframe(15.0f,
+            glm::vec3(-25.0f, 8.0f, 10.0f),
+            glm::vec3(0.0f, 0.0f, 0.0f));
+
+        cameraPath->addKeyframe(20.0f,
+            glm::vec3(0.0f, 15.0f, 40.0f),
+            glm::vec3(0.0f, 0.0f, 0.0f));
+
+        cameraPath->setLoop(true);
+        cameraPath->setInterpolationMode(AnimationController::InterpolationMode::CATMULL_ROM);
+        cameraPath->setSpeed(0.5f); // Pomalsia animacia
+
+        std::cout << "Camera path created with " << cameraPath->getDuration() << "s duration" << std::endl;
+    }
+
+    // Pomocne metody pre camera animation:
+    void Scene::startCameraAnimation() {
+        if (cameraPath) {
+            useCameraAnimation = true;
+            cameraPath->play();
+            std::cout << "Camera animation started" << std::endl;
+        }
+    }
+
+    void Scene::stopCameraAnimation() {
+        useCameraAnimation = false;
+        if (cameraPath) {
+            cameraPath->stop();
+        }
+        std::cout << "Camera animation stopped" << std::endl;
+    }
+
+    bool Scene::isCameraAnimationActive() const {
+        return useCameraAnimation;
     }
 
 }

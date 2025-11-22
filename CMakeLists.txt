@@ -209,6 +209,7 @@ add_executable(main_demo
         src/lighting/shadow_map.cpp
         src/lighting/spot_light.cpp
         src/objects/test_cube.cpp
+        src/objects/animated_cube.cpp
         src/objects/bird.cpp
         src/objects/crab.cpp
         src/objects/island.cpp

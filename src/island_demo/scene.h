@@ -11,6 +11,8 @@
 #include "lighting/directional_light.h"
 #include "lighting/point_light.h"
 #include "lighting/spot_light.h"
+#include "camera/camera_path.h"
+#include "objects/animated_cube.h"
 
 namespace ppgso {
 
@@ -52,6 +54,10 @@ namespace ppgso {
         // Cas
         float getTime() const;
 
+        void startCameraAnimation();
+        void stopCameraAnimation();
+        bool isCameraAnimationActive() const;
+
     private:
         // Kamera
         Camera camera;
@@ -61,6 +67,9 @@ namespace ppgso {
 
         // Svetla
         std::vector<std::shared_ptr<Light>> lights;
+
+        std::unique_ptr<CameraPath> cameraPath;
+        bool useCameraAnimation;
 
         // Cas
         float time;
@@ -73,6 +82,7 @@ namespace ppgso {
         void setupScene();
         void setupLights();
         void setupObjects();
+        void setupCameraAnimation();
 
         // Helper pre rendering s kamerou
         void renderNodeWithCamera(std::shared_ptr<SceneNode> node, const Camera& camera);

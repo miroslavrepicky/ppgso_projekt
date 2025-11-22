@@ -15,7 +15,13 @@ uniform mat3 NormalMatrix;
 
 void main() {
     FragPos = vec3(ModelMatrix * vec4(aPosition, 1.0));
-    Normal = normalize(NormalMatrix * aNormal);
+    // Normal = normalize(NormalMatrix * aNormal);
+    // Normal = normalize(aPosition);
+    if (length(aNormal) < 0.01) {
+        Normal = normalize(NormalMatrix * aPosition);
+    } else {
+        Normal = normalize(NormalMatrix * aNormal);
+    }
     TexCoord = aTexCoord;
 
     gl_Position = ProjectionMatrix * ViewMatrix * vec4(FragPos, 1.0);

@@ -40,14 +40,13 @@ public:
         glfwSwapInterval(1);
 
         std::cout << "==================================" << std::endl;
-        std::cout << "  Island Demo - Phase 2" << std::endl;
+        std::cout << "  Island Demo - Phase 3" << std::endl;
         std::cout << "==================================" << std::endl;
         std::cout << "Controls:" << std::endl;
         std::cout << "  ESC   - Quit" << std::endl;
         std::cout << "  SPACE - Pause/Resume" << std::endl;
-        std::cout << "  1     - Toggle Directional Light" << std::endl;
-        std::cout << "  2     - Toggle Point Light" << std::endl;
-        std::cout << "  3     - Toggle Spot Light" << std::endl;
+        std::cout << "  1/2/3 - Toggle Lights" << std::endl;
+        std::cout << "  C     - Toggle Camera Animation" << std::endl;
         std::cout << "==================================" << std::endl;
     }
 
@@ -70,7 +69,6 @@ public:
     }
 
     void onKey(int key, int scanCode, int action, int mods) override {
-        std::cout << "KEY PRESSED: " << key << " action: " << action << std::endl;
         if (action != GLFW_PRESS) return;
 
         switch (key) {
@@ -115,6 +113,14 @@ public:
                     std::cout << "🔦 Spot Light: " << (light->enabled ? "ON" : "OFF") << std::endl;
                 }else {
                     std::cout << "No lights available!" << std::endl;
+                }
+                break;
+
+            case GLFW_KEY_C:
+                if (scene->isCameraAnimationActive()) {
+                    scene->stopCameraAnimation();
+                } else {
+                    scene->startCameraAnimation();
                 }
                 break;
 
