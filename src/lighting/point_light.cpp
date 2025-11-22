@@ -1,5 +1,4 @@
 #include "point_light.h"
-#include <cmath>
 
 namespace ppgso {
 
@@ -11,7 +10,6 @@ namespace ppgso {
         , quadraticAttenuation(0.032f)
     {
         setColor(glm::vec3(1.0f, 1.0f, 1.0f));
-        intensity = 1.0f;
     }
 
     PointLight::PointLight(const glm::vec3& position)
@@ -33,8 +31,6 @@ namespace ppgso {
     }
 
     void PointLight::setRange(float range) {
-        // Vypocitaj attenuation faktory pre dany dosah
-        // Na okraji dosahu bude intenzita ~5% povodnej
         constantAttenuation = 1.0f;
         linearAttenuation = 4.5f / range;
         quadraticAttenuation = 75.0f / (range * range);
@@ -46,23 +42,14 @@ namespace ppgso {
             return;
         }
 
-        // Type
-        shader.setUniform(getUniformName(lightIndex, "type"), 1); // POINT
-
-        // Position
+        shader.setUniform(getUniformName(lightIndex, "type"), 1);
         shader.setUniform(getUniformName(lightIndex, "position"), position);
-
-        // Colors
         shader.setUniform(getUniformName(lightIndex, "ambient"), ambient * intensity);
         shader.setUniform(getUniformName(lightIndex, "diffuse"), diffuse * intensity);
         shader.setUniform(getUniformName(lightIndex, "specular"), specular * intensity);
-
-        // Attenuation
         shader.setUniform(getUniformName(lightIndex, "constantAttenuation"), constantAttenuation);
         shader.setUniform(getUniformName(lightIndex, "linearAttenuation"), linearAttenuation);
         shader.setUniform(getUniformName(lightIndex, "quadraticAttenuation"), quadraticAttenuation);
-
-        // Enabled
         shader.setUniform(getUniformName(lightIndex, "enabled"), 1);
     }
 

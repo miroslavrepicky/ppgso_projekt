@@ -4,11 +4,10 @@ namespace ppgso {
 
     DirectionalLight::DirectionalLight()
         : Light(LightType::DIRECTIONAL)
-        , direction(0.0f, -1.0f, 0.0f) // Svieti dole
+        , direction(0.0f, -1.0f, 0.0f)
     {
-        // Slnko - zlta farba, silne difuzne svetlo
         setColor(glm::vec3(1.0f, 0.95f, 0.8f));
-        diffuse = glm::vec3(1.2f, 1.15f, 1.0f); // HDR - viac ako 1.0
+        diffuse = glm::vec3(1.2f, 1.15f, 1.0f);
         intensity = 1.0f;
     }
 
@@ -28,34 +27,17 @@ namespace ppgso {
     }
 
     void DirectionalLight::setupShaderUniforms(ppgso::Shader& shader, int lightIndex) {
-        std::string prefix = "light" + std::to_string(lightIndex) + "_";
-
         if (!enabled) {
-            shader.setUniform(prefix + "enabled", 0);
+            shader.setUniform(getUniformName(lightIndex, "enabled"), 0);
             return;
         }
 
-        // Debug output
-        static int debugCount = 0;
-        if (debugCount++ % 120 == 0) {
-            std::cout << "DirectionalLight[" << lightIndex << "] setting uniforms:" << std::endl;
-            std::cout << "  direction: " << direction.x << ", " << direction.y << ", " << direction.z << std::endl;
-            std::cout << "  uniform name: " << prefix + "direction" << std::endl;
-        }
-
-        // Type
-        shader.setUniform(prefix + "type", 0); // DIRECTIONAL
-
-        // Direction
-        shader.setUniform(prefix + "direction", direction);
-
-        // Colors
-        shader.setUniform(prefix + "ambient", ambient * intensity);
-        shader.setUniform(prefix + "diffuse", diffuse * intensity);
-        shader.setUniform(prefix + "specular", specular * intensity);
-
-        // Enabled
-        shader.setUniform(prefix + "enabled", 1);
+        shader.setUniform(getUniformName(lightIndex, "type"), 0);
+        shader.setUniform(getUniformName(lightIndex, "direction"), direction);
+        shader.setUniform(getUniformName(lightIndex, "ambient"), ambient * intensity);
+        shader.setUniform(getUniformName(lightIndex, "diffuse"), diffuse * intensity);
+        shader.setUniform(getUniformName(lightIndex, "specular"), specular * intensity);
+        shader.setUniform(getUniformName(lightIndex, "enabled"), 1);
     }
 
 } // namespace ppgso

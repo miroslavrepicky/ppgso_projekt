@@ -13,7 +13,6 @@ namespace ppgso {
         , quadraticAttenuation(0.032f)
     {
         setColor(glm::vec3(1.0f, 1.0f, 1.0f));
-        intensity = 1.0f;
     }
 
     SpotLight::SpotLight(const glm::vec3& position, const glm::vec3& direction)
@@ -46,7 +45,6 @@ namespace ppgso {
     }
 
     void SpotLight::setCutoff(float innerDegrees, float outerDegrees) {
-        // Preved stupne na radiany a potom na cos (pre rychlejsie porovnavanie v shaderi)
         innerCutoff = glm::cos(glm::radians(innerDegrees));
         outerCutoff = glm::cos(glm::radians(outerDegrees));
     }
@@ -63,28 +61,17 @@ namespace ppgso {
             return;
         }
 
-        // Type
-        shader.setUniform(getUniformName(lightIndex, "type"), 2); // SPOT
-
-        // Position and direction
+        shader.setUniform(getUniformName(lightIndex, "type"), 2);
         shader.setUniform(getUniformName(lightIndex, "position"), position);
         shader.setUniform(getUniformName(lightIndex, "direction"), direction);
-
-        // Colors
         shader.setUniform(getUniformName(lightIndex, "ambient"), ambient * intensity);
         shader.setUniform(getUniformName(lightIndex, "diffuse"), diffuse * intensity);
         shader.setUniform(getUniformName(lightIndex, "specular"), specular * intensity);
-
-        // Cutoff angles (already as cosine)
         shader.setUniform(getUniformName(lightIndex, "innerCutoff"), innerCutoff);
         shader.setUniform(getUniformName(lightIndex, "outerCutoff"), outerCutoff);
-
-        // Attenuation
         shader.setUniform(getUniformName(lightIndex, "constantAttenuation"), constantAttenuation);
         shader.setUniform(getUniformName(lightIndex, "linearAttenuation"), linearAttenuation);
         shader.setUniform(getUniformName(lightIndex, "quadraticAttenuation"), quadraticAttenuation);
-
-        // Enabled
         shader.setUniform(getUniformName(lightIndex, "enabled"), 1);
     }
 

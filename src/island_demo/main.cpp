@@ -91,6 +91,8 @@ public:
                     auto& light = scene->getLights()[0];
                     light->enabled = !light->enabled;
                     std::cout << "☀ Directional Light: " << (light->enabled ? "ON" : "OFF") << std::endl;
+                }else {
+                    std::cout << "No lights available!" << std::endl;
                 }
                 break;
 
@@ -100,6 +102,8 @@ public:
                     auto& light = scene->getLights()[1];
                     light->enabled = !light->enabled;
                     std::cout << "💡 Point Light: " << (light->enabled ? "ON" : "OFF") << std::endl;
+                }else {
+                    std::cout << "No lights available!" << std::endl;
                 }
                 break;
 
@@ -109,6 +113,8 @@ public:
                     auto& light = scene->getLights()[2];
                     light->enabled = !light->enabled;
                     std::cout << "🔦 Spot Light: " << (light->enabled ? "ON" : "OFF") << std::endl;
+                }else {
+                    std::cout << "No lights available!" << std::endl;
                 }
                 break;
 

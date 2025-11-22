@@ -21,22 +21,20 @@ namespace ppgso {
     }
 
     void Object::renderWithCamera(const Camera& camera) {
-        if (!mesh || !shader) {
-            return;
-        }
+        if (!mesh || !shader) return;
 
-        // Pouzit shader
         shader->use();
-
-        // Nastavit uniformy
         setupShaderUniforms(camera);
 
-        // Bind texture ak existuje
-        if (texture) {
-            shader->setUniform("Texture", *texture);
-        }
+        // WORKAROUND - compute transformed normals on CPU
+        glm::mat3 normalMatrix = glm::transpose(glm::inverse(glm::mat3(transform.getWorldMatrix())));
 
-        // Vykreslit mesh
+        // Test - send one transformed normal vector
+        glm::vec3 testNormal = normalMatrix * glm::vec3(0, 1, 0);
+        shader->setUniform("testTransformedNormal", testNormal);
+
+        std::cout << "Test normal: " << testNormal.x << ", " << testNormal.y << ", " << testNormal.z << std::endl;
+
         mesh->render();
     }
 
@@ -50,6 +48,8 @@ namespace ppgso {
     }
 
     void Object::loadShader(const std::string& vertPath, const std::string& fragPath) {
+        std::cout << "Vert shader length IN loadShader: " << vertPath.length() << std::endl;
+        std::cout << "Frag shader length IN loadShader: " << fragPath.length() << std::endl;
         try {
             // ppgso::Shader očakáva cesty bez .glsl prípony alebo priamo string s kodom
             shader = std::make_unique<ppgso::Shader>(vertPath, fragPath);
@@ -78,25 +78,15 @@ namespace ppgso {
     void Object::setupShaderUniforms(const Camera& camera) {
         if (!shader) return;
 
-        // Model matica (world transform)
         glm::mat4 modelMatrix = transform.getWorldMatrix();
         shader->setUniform("ModelMatrix", modelMatrix);
+        shader->setUniform("ViewMatrix", camera.getViewMatrix());
+        shader->setUniform("ProjectionMatrix", camera.getProjectionMatrix());
 
-        // View matica
-        glm::mat4 viewMatrix = camera.getViewMatrix();
-        shader->setUniform("ViewMatrix", viewMatrix);
-
-        // Projection matica
-        glm::mat4 projectionMatrix = camera.getProjectionMatrix();
-        shader->setUniform("ProjectionMatrix", projectionMatrix);
-
-        // ModelViewProjection matica (pre optimalizaciu)
-        glm::mat4 mvp = projectionMatrix * viewMatrix * modelMatrix;
-        shader->setUniform("MVP", mvp);
-
-        // Normal matica (pre osvetlenie)
+        // NormalMatrix workaround
         glm::mat3 normalMatrix = glm::transpose(glm::inverse(glm::mat3(modelMatrix)));
-        shader->setUniform("NormalMatrix", normalMatrix);
+        shader->setUniform("NormalMatrix0", normalMatrix[0]);
+        shader->setUniform("NormalMatrix1", normalMatrix[1]);
+        shader->setUniform("NormalMatrix2", normalMatrix[2]);
     }
-
 } // namespace ppgso

@@ -3,7 +3,6 @@
 #include "objects/object.h"
 
 namespace ppgso {
-
     Scene::Scene()
         : time(0.0f)
         , width(800)
@@ -136,40 +135,34 @@ namespace ppgso {
     }
 
     void Scene::setupLights() {
-        // 1. Directional Light (Slnko) - silnejsie pre testovanie
         auto sun = std::make_shared<DirectionalLight>();
         sun->setDirection(glm::vec3(-0.3f, -1.0f, -0.5f));
-        sun->ambient = glm::vec3(0.5f, 0.5f, 0.5f);  // Silny ambient pre test
-        sun->diffuse = glm::vec3(2.0f, 1.9f, 1.6f);  // Velmi silne difuzne svetlo
+        sun->ambient = glm::vec3(0.4f, 0.4f, 0.4f);
+        sun->diffuse = glm::vec3(1.5f, 1.5f, 1.5f);
         sun->specular = glm::vec3(1.0f, 1.0f, 1.0f);
         sun->intensity = 1.0f;
         lights.push_back(sun);
 
-        // 2. Point Light (Bodove svetlo nad scenou)
         auto pointLight = std::make_shared<PointLight>(glm::vec3(5.0f, 10.0f, 5.0f));
-        pointLight->setColor(glm::vec3(1.0f, 0.8f, 0.6f)); // Tepla oranzova
-        pointLight->intensity = 2.0f;  // Vyssia intenzita
+        pointLight->setColor(glm::vec3(1.0f, 0.8f, 0.6f));
+        pointLight->intensity = 2.0f;
         pointLight->setRange(50.0f);
         lights.push_back(pointLight);
 
-        // 3. Spot Light (Reflektor)
         auto spotlight = std::make_shared<SpotLight>(
             glm::vec3(-5.0f, 10.0f, -5.0f),
             glm::vec3(0.5f, -1.0f, 0.5f)
         );
-        spotlight->setColor(glm::vec3(0.8f, 0.9f, 1.0f)); // Studena modra
-        spotlight->intensity = 2.0f;  // Vyssia intenzita
+        spotlight->setColor(glm::vec3(0.8f, 0.9f, 1.0f));
+        spotlight->intensity = 2.0f;
         spotlight->setCutoff(15.0f, 25.0f);
         spotlight->setRange(40.0f);
         lights.push_back(spotlight);
 
         std::cout << "Created " << lights.size() << " lights" << std::endl;
-        std::cout << "Sun direction: " << sun->getDirection().x << ", "
-                  << sun->getDirection().y << ", " << sun->getDirection().z << std::endl;
     }
 
     void Scene::setupObjects() {
-        // Testovacia kocka v strede
         auto cube = std::make_shared<TestCube>();
         cube->getTransform().setPosition(glm::vec3(0.0f, 0.0f, 0.0f));
         cube->getTransform().setScale(2.0f);
@@ -179,4 +172,4 @@ namespace ppgso {
         std::cout << "Created test objects" << std::endl;
     }
 
-} // namespace ppgso
+}

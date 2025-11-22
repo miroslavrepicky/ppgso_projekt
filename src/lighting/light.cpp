@@ -20,26 +20,12 @@ namespace ppgso {
     }
 
     void Light::setColor(const glm::vec3& color) {
-        // Nastav vsetky zlozky na rovnaku farbu
-        ambient = color * 0.2f;  // Ambient je tmavsi
+        ambient = color * 0.2f;
         diffuse = color;
         specular = color;
     }
 
-    void Light::setAmbient(const glm::vec3& ambient) {
-        this->ambient = ambient;
-    }
-
-    void Light::setDiffuse(const glm::vec3& diffuse) {
-        this->diffuse = diffuse;
-    }
-
-    void Light::setSpecular(const glm::vec3& specular) {
-        this->specular = specular;
-    }
-
     std::string Light::getUniformName(int lightIndex, const std::string& property) const {
-        // Instead of "lights[0].ambient", use "light0_ambient"
         return "light" + std::to_string(lightIndex) + "_" + property;
     }
 
